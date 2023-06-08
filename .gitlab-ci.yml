@@ -1,0 +1,25 @@
+image: hashicorp/terraform:latest
+
+before_script:
+  - terraform init
+stages:
+  - plan
+  - apply
+
+variables:
+  TF_CLI_ARGS: "-input=false"
+
+
+terraform-plan:
+  stage: plan
+  script:
+    - terraform plan -out=tfplan
+
+terraform-apply:
+  stage: apply
+  script:
+    - terraform apply -auto-approve tfplan
+  when: manual
+  needs:
+    - terraform-plan
+
